@@ -1,6 +1,7 @@
 package com.bprints.be.transformer;
 
 import com.bprints.be.dtos.UserDTO;
+import com.bprints.be.entities.ERole;
 import com.bprints.be.entities.User;
 import com.bprints.be.payload.request.SignupRequest;
 
@@ -21,7 +22,7 @@ public class UserTransformer {
      * @param dto
      * @return
      */
-    public static User toNewEntity(UserDTO dto) {
+    public static User toNewCustomerUserEntity(UserDTO dto) {
         User entity = new User();
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
@@ -31,13 +32,27 @@ public class UserTransformer {
         return entity;
     }
 
-    public static User toNewEntity(SignupRequest request, String encodePassword) {
+    public static User toNewCustomerUserEntity(SignupRequest request, String encodePassword) {
         User entity = new User();
         entity.setEmail(request.getEmail());
         entity.setPhone(request.getPhone());
         entity.setPassword(encodePassword);
         entity.setUsername(request.getUsername());
+
+        //TODO: Create new Wallet
         entity.setWalletId(request.getWalletId());
+        entity.setRoleId(ERole.ROLE_USER.getId());
+        return entity;
+    }
+
+    public static User toNewAdminUserEntity(SignupRequest request, String encodePassword) {
+        User entity = new User();
+        entity.setEmail(request.getEmail());
+        entity.setPhone(request.getPhone());
+        entity.setPassword(encodePassword);
+        entity.setUsername(request.getUsername());
+        entity.setWalletId(0L);
+        entity.setRoleId(ERole.ROLE_ADMIN.getId());
         return entity;
     }
 }

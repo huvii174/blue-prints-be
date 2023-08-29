@@ -1,7 +1,6 @@
 package com.bprints.be.security.jwt;
 
 import com.bprints.be.security.service.UserDetailsServiceImpl;
-import com.bprints.be.entities.ERole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,14 +31,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 // Authority here
-                String role = jwtUtils.getRoleFromJwtToken(jwt);
-                switch (role) {
-                    case "ROLE_USER":
-                        handleUserToken(request, jwt);
-                        break;
-                    default:
-                        throw new IllegalStateException(role);
-                }
+                handleUserToken(request, jwt);
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication:", e);

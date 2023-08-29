@@ -3,6 +3,7 @@ package com.bprints.be.security.service;
 import com.bprints.be.entities.ERole;
 import com.bprints.be.entities.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -24,10 +26,10 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private GrantedAuthority authorities;
 
     public UserDetailsImpl(Long id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+                           GrantedAuthority authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -36,27 +38,22 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(ERole.ROLE_USER.name()));
 
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities);
+                new SimpleGrantedAuthority(ERole.of(user.getRoleId()).name()));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Collections.singletonList(this.authorities);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
+    public String getRole() {
+        return this.authorities.getAuthority();
     }
 
     @Override
