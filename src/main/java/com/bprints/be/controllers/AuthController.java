@@ -55,19 +55,18 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        return ResponseEntity.ok(JwtResponse.builder()
+                        .token(jwt)
+                        .id(userDetails.getId())
+                        .username(userDetails.getUsername())
+                        .email(userDetails.getEmail())
+                        .role(userDetails.getRole())
+                        .build());
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    @PostMapping("/customer/signup")
+    public ResponseEntity<?> registerCustomerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -81,7 +80,30 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = UserTransformer.toNewEntity(signUpRequest, encoder.encode(signUpRequest.getPassword()));
+        User user = UserTransformer.toNewCustomerUserEntity(signUpRequest, encoder.encode(signUpRequest.getPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+
+    // TODO: Stronger credential
+    @PostMapping("/admin/signup")
+    public ResponseEntity<?> registerAdminUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
+
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
+
+        // Create new user's account
+        User user = UserTransformer.toNewAdminUserEntity(signUpRequest, encoder.encode(signUpRequest.getPassword()));
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
