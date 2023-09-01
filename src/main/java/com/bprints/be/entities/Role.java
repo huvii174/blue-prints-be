@@ -3,11 +3,13 @@ package com.bprints.be.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 
 
 @Entity
-@Table(name = "roles")
+@Table(name = "role")
 @Data
 public class Role {
 
@@ -18,6 +20,9 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", length = 20)
     private ERole name;
+
+    @OneToMany(mappedBy = "role")
+    private List<User> users = new ArrayList<>();
 
     @Column(name = "created_by")
     private String createdBy = "System";

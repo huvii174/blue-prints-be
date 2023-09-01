@@ -44,12 +44,13 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @NotNull
-    @Column(name = "role_id")
-    private Integer roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    @Column(name = "wallet_id")
-    private Long walletId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+    private Wallet wallet;
 
     @Column(name = "created_by")
     private String createdBy = "System";

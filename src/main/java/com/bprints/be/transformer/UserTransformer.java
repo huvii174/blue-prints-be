@@ -2,8 +2,12 @@ package com.bprints.be.transformer;
 
 import com.bprints.be.dtos.UserDTO;
 import com.bprints.be.entities.ERole;
+import com.bprints.be.entities.Role;
 import com.bprints.be.entities.User;
+import com.bprints.be.entities.Wallet;
 import com.bprints.be.payload.request.SignupRequest;
+
+import java.math.BigDecimal;
 
 public class UserTransformer {
     public static UserDTO toDTO(User entity) {
@@ -13,7 +17,7 @@ public class UserTransformer {
                 .phone(entity.getPhone())
                 .password(entity.getPassword())
                 .username(entity.getUsername())
-                .walletId(entity.getWalletId())
+                .walletId(entity.getWallet().getId())
                 .build();
     }
 
@@ -28,7 +32,7 @@ public class UserTransformer {
         entity.setPhone(dto.getPhone());
         entity.setPassword(dto.getPassword());
         entity.setUsername(dto.getUsername());
-        entity.setWalletId(dto.getWalletId());
+//        entity.set(dto.getWalletId());
         return entity;
     }
 
@@ -38,10 +42,9 @@ public class UserTransformer {
         entity.setPhone(request.getPhone());
         entity.setPassword(encodePassword);
         entity.setUsername(request.getUsername());
-
-        //TODO: Create new Wallet
-        entity.setWalletId(request.getWalletId());
-        entity.setRoleId(ERole.ROLE_USER.getId());
+        entity.setRole(builCustomerRole());
+        Wallet wallet = new Wallet(BigDecimal.ZERO, entity);
+        entity.setWallet(wallet);
         return entity;
     }
 
@@ -51,8 +54,22 @@ public class UserTransformer {
         entity.setPhone(request.getPhone());
         entity.setPassword(encodePassword);
         entity.setUsername(request.getUsername());
-        entity.setWalletId(0L);
-        entity.setRoleId(ERole.ROLE_ADMIN.getId());
+        entity.setRole(builAdminRole());
+        entity.setWallet(new Wallet(BigDecimal.ZERO, entity));
         return entity;
+    }
+
+    private static Role builCustomerRole() {
+        Role role = new Role();
+        role.setId((long) ERole.ROLE_USER.id);
+        role.setName(ERole.ROLE_USER);
+        return role;
+    }
+
+    private static Role builAdminRole() {
+        Role role = new Role();
+        role.setId((long) ERole.ROLE_ADMIN.id);
+        role.setName(ERole.ROLE_ADMIN);
+        return role;
     }
 }

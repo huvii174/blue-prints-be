@@ -8,6 +8,21 @@ Backend for Blue Prints Domain
 * Maven 3.9.x
 * PostgresSQL
 
+### Run Insert Role data into database
+```postgresql
+INSERT INTO public."role"
+(id, created_by, created_on, updated_by, updated_on, "name")
+VALUES(1000, '', '', '', '', 'ROLE_USER');
+
+INSERT INTO public."role"
+(id, created_by, created_on, updated_by, updated_on, "name")
+VALUES(2000, '', '', '', '', 'ROLE_MODERATOR');
+
+INSERT INTO public."role"
+(id, created_by, created_on, updated_by, updated_on, "name")
+VALUES(3000, '', '', '', '', 'ROLE_ADMIN');
+```
+
 ### Run Spring Boot application
 ```
 mvn clean install 

@@ -28,8 +28,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private GrantedAuthority authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
-                           GrantedAuthority authorities) {
+    public UserDetailsImpl(Long id, String username, String email, String password, GrantedAuthority authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -44,7 +43,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                new SimpleGrantedAuthority(ERole.of(user.getRoleId()).name()));
+                new SimpleGrantedAuthority(ERole.of(user.getRole().getId().intValue()).name()));
     }
 
     @Override
@@ -88,10 +87,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
