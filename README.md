@@ -12,15 +12,15 @@ Backend for Blue Prints Domain
 ```postgresql
 INSERT INTO public."role"
 (id, created_by, created_on, updated_by, updated_on, "name")
-VALUES(1000, '', '', '', '', 'ROLE_USER');
+VALUES(1000, 'System', NOW(), 'System', NOW(), 'ROLE_USER');
 
 INSERT INTO public."role"
 (id, created_by, created_on, updated_by, updated_on, "name")
-VALUES(2000, '', '', '', '', 'ROLE_MODERATOR');
+VALUES(2000, 'System', NOW(), 'System', NOW(), 'ROLE_MODERATOR');
 
 INSERT INTO public."role"
 (id, created_by, created_on, updated_by, updated_on, "name")
-VALUES(3000, '', '', '', '', 'ROLE_ADMIN');
+VALUES(3000, 'System', NOW(), 'System', NOW(), 'ROLE_ADMIN');
 ```
 
 ### Run Spring Boot application
