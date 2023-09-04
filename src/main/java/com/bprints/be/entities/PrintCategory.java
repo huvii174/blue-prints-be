@@ -1,30 +1,31 @@
 package com.bprints.be.entities;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
-
+import javax.validation.constraints.NotBlank;
+import java.util.*;
 
 @Entity
-@Table(name = "role")
+@Table(name = "category")
 @Getter
 @Setter
-public class Role {
+public class PrintCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name", length = 20)
-    private ERole name;
+    @OneToMany(mappedBy = "printCategory")
+    private Set<PrintTag> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "role")
-    private List<User> users = new ArrayList<>();
+    @NotBlank
+    @Column(name = "name")
+    private String name;
+
+    @NotBlank
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "created_by")
     private String createdBy = "System";
