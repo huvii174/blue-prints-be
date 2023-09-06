@@ -13,7 +13,6 @@ import java.util.Set;
 @Builder
 public class PrintCategoryDto {
     private Long id;
-    private Set<PrintTagDto> tags;
     private Set<Long> tagIdList;
 
     @NotBlank
@@ -23,4 +22,5 @@ public class PrintCategoryDto {
     private String description;
 
     private Boolean status;
+    private Set<PrintTagDto> tags;
 }

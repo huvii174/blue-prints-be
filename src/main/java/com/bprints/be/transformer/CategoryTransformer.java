@@ -1,7 +1,11 @@
 package com.bprints.be.transformer;
 
 import com.bprints.be.dtos.PrintCategoryDto;
+import com.bprints.be.dtos.PrintTagDto;
 import com.bprints.be.entities.PrintCategory;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CategoryTransformer {
     public static PrintCategory toEntity(PrintCategoryDto printCategoryDto){
@@ -12,7 +16,20 @@ public class CategoryTransformer {
         return entity;
     }
 
-    public static PrintCategoryDto toDto(PrintCategory printCategory){
+    public static PrintCategoryDto toDtoWithPrintTags(PrintCategory printCategory){
+        PrintCategoryDto printCategoryDto = toDto(printCategory);
+
+        //set print tags
+        if (!printCategory.getTags().isEmpty()){
+            Set<PrintTagDto> printTagDtoSet = printCategory.getTags().stream()
+                    .map(printTag -> PrintTagTransformer.toDto(printTag))
+                    .collect(Collectors.toSet());
+            printCategoryDto.setTags(printTagDtoSet);
+        }
+        return printCategoryDto;
+    }
+
+    public static PrintCategoryDto toDto(PrintCategory printCategory) {
         return PrintCategoryDto.builder()
                 .id(printCategory.getId())
                 .name(printCategory.getName())

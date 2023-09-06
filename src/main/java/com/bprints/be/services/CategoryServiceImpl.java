@@ -3,7 +3,7 @@ package com.bprints.be.services;
 import com.bprints.be.dtos.PrintCategoryDto;
 import com.bprints.be.dtos.PrintTagDto;
 import com.bprints.be.entities.PrintCategory;
-import com.bprints.be.entities.PrintTag;
+import com.bprints.be.payload.response.BluePrintResponse;
 import com.bprints.be.payload.response.CategoryResponse;
 import com.bprints.be.repositories.CategoryRepository;
 import com.bprints.be.repositories.PrintTagRepository;
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
-    private PrintTagRepository printTagRepository;
 
     @Override
     public void saveCategory(PrintCategoryDto categoryDto) {
@@ -65,13 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
             return null;
         }
         PrintCategory printCategory = optionalCategory.get();
-        PrintCategoryDto printCategoryDto = CategoryTransformer.toDto(printCategory);
-
-        //Set Design print tag
-        Set<PrintTagDto> printTagDtoSet = printCategory.getTags().stream()
-                .map(printTag -> PrintTagTransformer.toDto(printTag))
-                .collect(Collectors.toSet());
-        printCategoryDto.setTags(printTagDtoSet);
+        PrintCategoryDto printCategoryDto = CategoryTransformer.toDtoWithPrintTags(printCategory);
 
         return printCategoryDto;
     }
@@ -81,13 +74,16 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("CategoryService :: findAll");
         Page<PrintCategory> page = this.categoryRepository.findByStatus(pageable, true);
         List<PrintCategoryDto> printCategories = page.getContent().stream()
-                .map(category -> CategoryTransformer.toDto(category))
+                .map(category -> CategoryTransformer.toDtoWithPrintTags(category))
                 .collect(Collectors.toList());
-        return new CategoryResponse(printCategories,
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages());
+
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setCategoryDtoList(printCategories);
+        categoryResponse.setPageNo(page.getNumber());
+        categoryResponse.setPageSize(page.getSize());
+        categoryResponse.setTotalElements(page.getTotalElements());
+        categoryResponse.setTotalPages(page.getTotalPages());
+        return categoryResponse;
     }
 
     @Override

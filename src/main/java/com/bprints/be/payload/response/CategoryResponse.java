@@ -8,12 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
+public class CategoryResponse extends ResponseBase {
     private List<PrintCategoryDto> categoryDtoList;
-    private int pageNo;
-    private int pageSize;
-    private long totalElements;
-    private int totalPages;
 }

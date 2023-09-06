@@ -155,11 +155,14 @@ public class BluePrintServiceImpl implements BluePrintService {
         List<BluePrintDto> bluePrintDtoList = page.getContent().stream()
                 .map(bluePrint -> BluePrintTransformer.toBluePrintDto(bluePrint))
                 .collect(Collectors.toList());
-        return new BluePrintResponse(bluePrintDtoList,
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages());
+
+        BluePrintResponse bluePrintResponse = new BluePrintResponse();
+        bluePrintResponse.setBluePrintList(bluePrintDtoList);
+        bluePrintResponse.setPageNo(page.getNumber());
+        bluePrintResponse.setPageSize(page.getSize());
+        bluePrintResponse.setTotalElements(page.getTotalElements());
+        bluePrintResponse.setTotalPages(page.getTotalPages());
+        return bluePrintResponse;
     }
 //
 

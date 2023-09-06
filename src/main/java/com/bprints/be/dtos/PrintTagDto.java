@@ -14,8 +14,12 @@ import javax.validation.constraints.NotBlank;
 public class PrintTagDto {
     private Long id;
 
+    private Long categoryId;
+
     @NotBlank
     private String name;
 
     private Boolean status;
+
+    private PrintCategoryDto printCategoryDto;
 }
