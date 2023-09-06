@@ -15,6 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class BluePrintDto {
+    private Long id;
+
     @NotBlank
     private String name;
 
@@ -23,7 +25,7 @@ public class BluePrintDto {
     @NotBlank
     private String downloadLink;
 
-    @NotBlank
+    @NotNull
     private Integer fileSize;
 
     private Set<DesignToolDto> designTools;

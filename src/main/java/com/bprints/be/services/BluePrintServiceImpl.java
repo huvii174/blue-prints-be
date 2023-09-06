@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BluePrintServiceImpl implements BluePrintService {
     private BluePrintRepository bluePrintRepository;
-    private CollectionRepository collectionRepository;
     private DesignStyleRepository designStyleRepository;
     private DesignToolRepository designToolRepository;
     private PrintTagRepository printTagRepository;
@@ -71,27 +70,18 @@ public class BluePrintServiceImpl implements BluePrintService {
             newBluePrint.setPrintTags(printTagSet);
         }
 
-        //Add Design collection
-        if (!bluePrintDto.getPrintCollectionIdList().isEmpty()) {
-            Set<PrintCollection> printCollectionSet = new HashSet<>();
-            bluePrintDto.getPrintCollectionIdList().stream()
-                    .forEach(id -> {
-                        Optional<PrintCollection> optionalPrintCollection = this.collectionRepository.findById(id);
-                        if (optionalPrintCollection.isPresent()) {
-                            printCollectionSet.add(optionalPrintCollection.get());
-                        } else log.info("BluePrintService :: saveBluePrint : Print collection not exist for id: " + id);
-                    });
-            newBluePrint.setPrintCollections(printCollectionSet);
-        }
-
         this.bluePrintRepository.save(newBluePrint);
     }
 
     @Override
     public BluePrintDto getBluePrintById(Long id) {
         log.info("BluePrintService :: getBluePrintById request id {}", id);
-        BluePrint bluePrint = this.bluePrintRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("BluePrintService :: getBluePrintById : Blue print Not Found with id: " + id));
+        Optional<BluePrint> optionalBluePrint = this.bluePrintRepository.findByIdAndStatus(id, true);
+        if (optionalBluePrint.isEmpty()){
+            log.error("BluePrintService :: getBluePrintById : Blue print Not Found with id: " + id);
+            return null;
+        }
+        BluePrint bluePrint = optionalBluePrint.get();
         BluePrintDto bluePrintDto = BluePrintTransformer.toBluePrintDto(bluePrint);
 
         //Set Design style list
@@ -123,11 +113,14 @@ public class BluePrintServiceImpl implements BluePrintService {
 
     @Override
     public BluePrintResponse searchBluePrint(Pageable pageable, String name, Long tagId, Long toolId, Long styleId) {
+        log.info("BluePrintService :: searchBluePrint request bluePrintIdList name: {}, tagId: {}, toolId: {}, styleId: {}",
+                name, tagId, toolId, styleId);
         Specification<BluePrint> spec = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            predicates.add(builder.equal(root.get("status"), true));
             if (name != null) {
-                predicates.add(builder.like(root.get("name"), name));
+                predicates.add(builder.like(root.get("name"), "%" + name + "%"));
             }
 
             if (tagId != null) {
@@ -137,12 +130,12 @@ public class BluePrintServiceImpl implements BluePrintService {
 
             if (toolId != null) {
                 Join<BluePrint, Class> classJoin = root.join("designTools");
-                predicates.add(builder.equal(classJoin.get("id"), tagId));
+                predicates.add(builder.equal(classJoin.get("id"), toolId));
             }
 
             if (styleId != null) {
                 Join<BluePrint, Class> classJoin = root.join("designStyles");
-                predicates.add(builder.equal(classJoin.get("id"), tagId));
+                predicates.add(builder.equal(classJoin.get("id"), styleId));
             }
             return builder.and(predicates.toArray(new Predicate[0]));
         };
@@ -164,7 +157,7 @@ public class BluePrintServiceImpl implements BluePrintService {
         List<BluePrint> bluePrints = new ArrayList<>();
         bluePrintIdList.stream()
                 .forEach(id -> {
-                    Optional<BluePrint> optionalBluePrint = this.bluePrintRepository.findById(id);
+                    Optional<BluePrint> optionalBluePrint = this.bluePrintRepository.findByIdAndStatus(id, true);
                     if (optionalBluePrint.isPresent()) {
                         BluePrint bluePrint = optionalBluePrint.get();
                         bluePrint.setStatus(false);

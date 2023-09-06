@@ -19,6 +19,7 @@ public class BluePrintTransformer {
 
     public static BluePrintDto toBluePrintDto(BluePrint bluePrint){
         return BluePrintDto.builder()
+                .id(bluePrint.getId())
                 .name(bluePrint.getName())
                 .description(bluePrint.getDescription())
                 .fileSize(bluePrint.getFileSize())

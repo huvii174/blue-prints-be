@@ -31,7 +31,7 @@ public class BluePrint {
     @Column(name = "download_link")
     private String downloadLink;
 
-    @NotBlank
+    @NotNull
     @Column(name = "file_size")
     private Integer fileSize;
 
