@@ -7,9 +7,13 @@ import com.bprints.be.repositories.*;
 import com.bprints.be.transformer.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -119,8 +123,40 @@ public class BluePrintServiceImpl implements BluePrintService {
 
     @Override
     public BluePrintResponse searchBluePrint(Pageable pageable, String name, Long tagId, Long toolId, Long styleId) {
-        return null;
+        Specification<BluePrint> spec = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (name != null) {
+                predicates.add(builder.like(root.get("name"), name));
+            }
+
+            if (tagId != null) {
+                Join<BluePrint, Class> classJoin = root.join("printTags");
+                predicates.add(builder.equal(classJoin.get("id"), tagId));
+            }
+
+            if (toolId != null) {
+                Join<BluePrint, Class> classJoin = root.join("designTools");
+                predicates.add(builder.equal(classJoin.get("id"), tagId));
+            }
+
+            if (styleId != null) {
+                Join<BluePrint, Class> classJoin = root.join("designStyles");
+                predicates.add(builder.equal(classJoin.get("id"), tagId));
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+        Page<BluePrint> page = this.bluePrintRepository.findAll(spec, pageable);
+        List<BluePrintDto> bluePrintDtoList = page.getContent().stream()
+                .map(bluePrint -> BluePrintTransformer.toBluePrintDto(bluePrint))
+                .collect(Collectors.toList());
+        return new BluePrintResponse(bluePrintDtoList,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
     }
+//
 
     @Override
     public void changeBluePrintStatus(List<Long> bluePrintIdList) {
