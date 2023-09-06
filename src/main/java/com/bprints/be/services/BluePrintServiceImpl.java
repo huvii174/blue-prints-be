@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -27,9 +28,20 @@ public class BluePrintServiceImpl implements BluePrintService {
     private PrintTagRepository printTagRepository;
 
     @Override
+    @Transactional
     public void saveBluePrint(BluePrintDto bluePrintDto) {
         log.info("BluePrintService :: saveBluePrint request -> bluePrintDto {}", bluePrintDto);
-        BluePrint newBluePrint = BluePrintTransformer.toBluePrintEntity(bluePrintDto);
+        BluePrint bluePrint = BluePrintTransformer.toBluePrintEntity(bluePrintDto);
+
+        //Update case
+        if (Objects.nonNull(bluePrintDto.getId())) {
+            Long id = bluePrintDto.getId();
+            Optional<BluePrint> optionalBluePrint = this.bluePrintRepository.findByIdAndStatus(id, true);
+            if (optionalBluePrint.isEmpty()){
+                log.error("BluePrintService :: getBluePrintById : Blue print Not Found with id: " + id);
+            }
+            bluePrint.setId(id);
+        }
 
         //Add Design style list
         if (!bluePrintDto.getDesignStyleIdList().isEmpty()) {
@@ -41,7 +53,7 @@ public class BluePrintServiceImpl implements BluePrintService {
                             designStyleSet.add(optionalDesignStyle.get());
                         } else log.info("BluePrintService :: saveBluePrint : Design style not exist for id: " + id);
                     });
-            newBluePrint.setDesignStyles(designStyleSet);
+            bluePrint.setDesignStyles(designStyleSet);
         }
 
         //Add Design tool list
@@ -54,7 +66,7 @@ public class BluePrintServiceImpl implements BluePrintService {
                             designToolSet.add(optionalDesignTool.get());
                         } else log.info("BluePrintService :: saveBluePrint : Design tool not exist for id: " + id);
                     });
-            newBluePrint.setDesignTools(designToolSet);
+            bluePrint.setDesignTools(designToolSet);
         }
 
         //Add Design print tag
@@ -67,10 +79,10 @@ public class BluePrintServiceImpl implements BluePrintService {
                             printTagSet.add(optionalPrintTag.get());
                         } else log.info("BluePrintService :: saveBluePrint : Print tag not exist for id: " + id);
                     });
-            newBluePrint.setPrintTags(printTagSet);
+            bluePrint.setPrintTags(printTagSet);
         }
 
-        this.bluePrintRepository.save(newBluePrint);
+        this.bluePrintRepository.save(bluePrint);
     }
 
     @Override
