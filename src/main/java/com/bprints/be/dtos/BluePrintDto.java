@@ -52,6 +52,5 @@ public class BluePrintDto {
     @NotNull
     private Integer downloadCount;
 
-    @NotNull
     private Boolean status;
 }

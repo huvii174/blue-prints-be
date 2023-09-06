@@ -175,7 +175,7 @@ public class BluePrintServiceImpl implements BluePrintService {
                         bluePrint.setStatus(false);
                         bluePrint.setLastUpdatedOn(new Date());
                         bluePrints.add(bluePrint);
-                    } else log.error("BluePrintService :: getBluePrintById : Blue print Not Found with id: " + id);
+                    } else log.error("BluePrintService :: changeBluePrintStatus : Blue print Not Found with id: " + id);
                 });
         this.bluePrintRepository.saveAll(bluePrints);
     }

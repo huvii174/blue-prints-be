@@ -13,7 +13,6 @@ public class BluePrintTransformer {
         entity.setPrice(bluePrintDto.getPrice());
         entity.setDownloadCount(bluePrintDto.getDownloadCount());
         entity.setDiscount(bluePrintDto.getDiscount());
-        entity.setStatus(bluePrintDto.getStatus());
         return entity;
     }
 

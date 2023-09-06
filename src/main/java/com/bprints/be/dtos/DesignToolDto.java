@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class DesignToolDto {
+    private Long id;
     @NotBlank
     private String name;
+    private Boolean status;
 }

@@ -12,6 +12,10 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class PrintTagDto {
+    private Long id;
+
     @NotBlank
     private String name;
+
+    private Boolean status;
 }

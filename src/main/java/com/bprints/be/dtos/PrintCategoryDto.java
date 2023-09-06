@@ -12,11 +12,15 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class PrintCategoryDto {
+    private Long id;
     private Set<PrintTagDto> tags;
+    private Set<Long> tagIdList;
 
     @NotBlank
     private String name;
 
     @NotBlank
     private String description;
+
+    private Boolean status;
 }

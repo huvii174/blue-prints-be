@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 public class PrintCollectionDto {
+    private Long id;
+
     @NotBlank
     private String name;
 
@@ -21,6 +23,5 @@ public class PrintCollectionDto {
     @NotNull
     private Integer downloadCount;
 
-    @NotNull
     private Boolean status;
 }

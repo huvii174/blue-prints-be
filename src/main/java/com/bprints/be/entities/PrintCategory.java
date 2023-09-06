@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -18,6 +19,10 @@ public class PrintCategory {
 
     @OneToMany(mappedBy = "printCategory")
     private Set<PrintTag> tags = new HashSet<>();
+
+    @NotNull
+    @Column(name = "status")
+    private Boolean status = true;
 
     @NotBlank
     @Column(name = "name")

@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class DesignStyleDto {
+    private Long id;
     @NotBlank
     private String name;
+    private Boolean status;
 }
