@@ -30,9 +30,9 @@ public class DesignStyleServiceImpl implements DesignStyleService {
             Long id = designStyleDto.getId();
             Optional<DesignStyle> optionalDesignStyle = this.designStyleRepository.findByIdAndStatus(id, true);
             if (optionalDesignStyle.isEmpty()) {
-                log.error("DesignStyleService :: saveStyle : Tool Not Found with id: " + id);
+                log.error("DesignStyleService :: saveStyle : Style Not Found with id: " + id);
             }
-            designStyle.setId(id);
+            else designStyle.setId(id);
         }
 
         this.designStyleRepository.save(designStyle);

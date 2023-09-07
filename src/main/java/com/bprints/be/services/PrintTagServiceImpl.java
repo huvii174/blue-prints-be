@@ -35,7 +35,7 @@ public class PrintTagServiceImpl implements PrintTagService {
             if (optionalPrintTag.isEmpty()) {
                 log.error("PrintTagService :: savePrintTag : Print tag Not Found with id: " + id);
             }
-            printTag.setId(id);
+            else printTag.setId(id);
         }
 
         //Add  category

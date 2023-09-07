@@ -32,7 +32,7 @@ public class DesignToolServiceImpl implements DesignToolService {
             if (optionalDesignTool.isEmpty()) {
                 log.error("DesignToolService :: saveTool : Tool Not Found with id: " + id);
             }
-            designTool.setId(id);
+            else designTool.setId(id);
         }
 
         this.designToolRepository.save(designTool);

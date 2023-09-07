@@ -35,7 +35,7 @@ public class CollectionServiceImpl implements CollectionService {
             if (optionalPrintCollection.isEmpty()) {
                 log.error("CollectionService :: saveCollection : Print collection Not Found with id: " + id);
             }
-            collection.setId(id);
+            else collection.setId(id);
         }
 
         //Add  blueprints

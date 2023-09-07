@@ -40,7 +40,7 @@ public class BluePrintServiceImpl implements BluePrintService {
             if (optionalBluePrint.isEmpty()){
                 log.error("BluePrintService :: getBluePrintById : Blue print Not Found with id: " + id);
             }
-            bluePrint.setId(id);
+            else bluePrint.setId(id);
         }
 
         //Add Design style list

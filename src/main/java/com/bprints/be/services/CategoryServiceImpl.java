@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (optionalPrintCategory.isEmpty()) {
                 log.error("CategoryService :: saveNewCategory : Category Not Found with id: " + id);
             }
-            printCategory.setId(id);
+            else printCategory.setId(id);
         }
 
         this.categoryRepository.save(printCategory);
