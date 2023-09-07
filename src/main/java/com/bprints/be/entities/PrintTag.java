@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,10 @@ public class PrintTag {
     @NotBlank
     @Column(name = "name")
     private String name;
+
+    @NotNull
+    @Column(name = "status")
+    private Boolean status = true;
 
     @ManyToOne
     @JoinColumn(name = "print_category_id")
