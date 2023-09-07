@@ -13,7 +13,9 @@ public class DesignToolTransformer {
 
     public static DesignToolDto toDto(DesignTool designTool){
         return DesignToolDto.builder()
+                .id(designTool.getId())
                 .name(designTool.getName())
+                .status(designTool.getStatus())
                 .build();
     }
 }

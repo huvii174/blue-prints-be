@@ -48,7 +48,7 @@ public class BluePrintServiceImpl implements BluePrintService {
             Set<DesignStyle> designStyleSet = new HashSet<>();
             bluePrintDto.getDesignStyleIdList().stream()
                     .forEach(id -> {
-                        Optional<DesignStyle> optionalDesignStyle = this.designStyleRepository.findById(id);
+                        Optional<DesignStyle> optionalDesignStyle = this.designStyleRepository.findByIdAndStatus(id, true);
                         if (optionalDesignStyle.isPresent()) {
                             designStyleSet.add(optionalDesignStyle.get());
                         } else log.info("BluePrintService :: saveBluePrint : Design style not exist for id: " + id);
@@ -61,7 +61,7 @@ public class BluePrintServiceImpl implements BluePrintService {
             Set<DesignTool> designToolSet = new HashSet<>();
             bluePrintDto.getDesignToolIdList().stream()
                     .forEach(id -> {
-                        Optional<DesignTool> optionalDesignTool = this.designToolRepository.findById(id);
+                        Optional<DesignTool> optionalDesignTool = this.designToolRepository.findByIdAndStatus(id, true);
                         if (optionalDesignTool.isPresent()) {
                             designToolSet.add(optionalDesignTool.get());
                         } else log.info("BluePrintService :: saveBluePrint : Design tool not exist for id: " + id);
@@ -74,7 +74,7 @@ public class BluePrintServiceImpl implements BluePrintService {
             Set<PrintTag> printTagSet = new HashSet<>();
             bluePrintDto.getPrintTagIdList().stream()
                     .forEach(id -> {
-                        Optional<PrintTag> optionalPrintTag = this.printTagRepository.findById(id);
+                        Optional<PrintTag> optionalPrintTag = this.printTagRepository.findByIdAndStatus(id, true);
                         if (optionalPrintTag.isPresent()) {
                             printTagSet.add(optionalPrintTag.get());
                         } else log.info("BluePrintService :: saveBluePrint : Print tag not exist for id: " + id);

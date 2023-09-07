@@ -13,7 +13,9 @@ public class DesignStyleTransformer {
 
     public static DesignStyleDto toDto(DesignStyle designStyle){
         return DesignStyleDto.builder()
+                .id(designStyle.getId())
                 .name(designStyle.getName())
+                .status(designStyle.getStatus())
                 .build();
     }
 }

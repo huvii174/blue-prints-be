@@ -1,5 +1,6 @@
 package com.bprints.be.dtos;
 
+import com.bprints.be.entities.BluePrint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +27,7 @@ public class PrintCollectionDto {
     private Integer downloadCount;
 
     private Boolean status;
+
+    private Set<Long> bluePrintIdList;
+    private Set<BluePrintDto> bluePrints;
 }

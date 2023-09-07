@@ -6,7 +6,6 @@ import com.bprints.be.entities.PrintTag;
 import com.bprints.be.payload.response.PrintTagResponse;
 import com.bprints.be.repositories.CategoryRepository;
 import com.bprints.be.repositories.PrintTagRepository;
-import com.bprints.be.transformer.CategoryTransformer;
 import com.bprints.be.transformer.PrintTagTransformer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

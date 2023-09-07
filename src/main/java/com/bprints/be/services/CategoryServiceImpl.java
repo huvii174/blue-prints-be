@@ -1,14 +1,10 @@
 package com.bprints.be.services;
 
 import com.bprints.be.dtos.PrintCategoryDto;
-import com.bprints.be.dtos.PrintTagDto;
 import com.bprints.be.entities.PrintCategory;
-import com.bprints.be.payload.response.BluePrintResponse;
 import com.bprints.be.payload.response.CategoryResponse;
 import com.bprints.be.repositories.CategoryRepository;
-import com.bprints.be.repositories.PrintTagRepository;
 import com.bprints.be.transformer.CategoryTransformer;
-import com.bprints.be.transformer.PrintTagTransformer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,19 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
             }
             printCategory.setId(id);
         }
-
-//        //Add  print tag list
-//        if (!categoryDto.getTagIdList().isEmpty()) {
-//            Set<PrintTag> printTagSet = new HashSet<>();
-//            categoryDto.getTagIdList().stream()
-//                    .forEach(id -> {
-//                        Optional<PrintTag> optionalPrintTag = this.printTagRepository.findById(id);
-//                        if (optionalPrintTag.isPresent()) {
-//                            printTagSet.add(optionalPrintTag.get());
-//                        } else log.info("CategoryService :: saveNewCategory : Print tag not exist for id: " + id);
-//                    });
-//            printCategory.setTags(printTagSet);
-//        }
 
         this.categoryRepository.save(printCategory);
     }
@@ -88,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void changeCategoryStatus(List<Long> categoryIdList) {
-        log.info("CategoryService :: changeCategoryStatus request bluePrintIdList {}", Arrays.toString(categoryIdList.toArray()));
+        log.info("CategoryService :: changeCategoryStatus request categoryIdList {}", Arrays.toString(categoryIdList.toArray()));
         List<PrintCategory> printCategories = new ArrayList<>();
         categoryIdList.stream()
                 .forEach(id -> {

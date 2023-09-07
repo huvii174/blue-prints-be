@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class CategoryResponse extends ResponseBase {
     private List<PrintCategoryDto> categoryDtoList;
 }
