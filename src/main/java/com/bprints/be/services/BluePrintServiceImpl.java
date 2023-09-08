@@ -94,33 +94,8 @@ public class BluePrintServiceImpl implements BluePrintService {
             return null;
         }
         BluePrint bluePrint = optionalBluePrint.get();
-        BluePrintDto bluePrintDto = BluePrintTransformer.toBluePrintDto(bluePrint);
 
-        //Set Design style list
-        Set<DesignStyleDto> designStyleDtoSet = bluePrint.getDesignStyles().stream()
-                .map(designStyle -> DesignStyleTransformer.toDto(designStyle))
-                .collect(Collectors.toSet());
-        bluePrintDto.setDesignStyles(designStyleDtoSet);
-
-        //Set Design tool list
-        Set<DesignToolDto> designToolDtoSet = bluePrint.getDesignTools().stream()
-                .map(designTool -> DesignToolTransformer.toDto(designTool))
-                .collect(Collectors.toSet());
-        bluePrintDto.setDesignTools(designToolDtoSet);
-
-        //Set Design print tag
-        Set<PrintTagDto> printTagDtoSet = bluePrint.getPrintTags().stream()
-                .map(printTag -> PrintTagTransformer.toDto(printTag))
-                .collect(Collectors.toSet());
-        bluePrintDto.setPrintTags(printTagDtoSet);
-
-        //Set Design collection
-        Set<PrintCollectionDto> collectionDtoSet = bluePrint.getPrintCollections().stream()
-                .map(collection -> CollectionTransformer.toDto(collection))
-                .collect(Collectors.toSet());
-        bluePrintDto.setPrintCollections(collectionDtoSet);
-
-        return bluePrintDto;
+        return BluePrintTransformer.toDtoWithOtherSets(bluePrint);
     }
 
     @Override
@@ -136,24 +111,24 @@ public class BluePrintServiceImpl implements BluePrintService {
             }
 
             if (tagId != null) {
-                Join<BluePrint, Class> classJoin = root.join("printTags");
+                Join<BluePrint, PrintTag> classJoin = root.join("printTags");
                 predicates.add(builder.equal(classJoin.get("id"), tagId));
             }
 
             if (toolId != null) {
-                Join<BluePrint, Class> classJoin = root.join("designTools");
+                Join<BluePrint, DesignTool> classJoin = root.join("designTools");
                 predicates.add(builder.equal(classJoin.get("id"), toolId));
             }
 
             if (styleId != null) {
-                Join<BluePrint, Class> classJoin = root.join("designStyles");
+                Join<BluePrint, DesignStyle> classJoin = root.join("designStyles");
                 predicates.add(builder.equal(classJoin.get("id"), styleId));
             }
             return builder.and(predicates.toArray(new Predicate[0]));
         };
         Page<BluePrint> page = this.bluePrintRepository.findAll(spec, pageable);
         List<BluePrintDto> bluePrintDtoList = page.getContent().stream()
-                .map(bluePrint -> BluePrintTransformer.toBluePrintDto(bluePrint))
+                .map(BluePrintTransformer::toDtoWithOtherSets)
                 .collect(Collectors.toList());
 
         BluePrintResponse bluePrintResponse = new BluePrintResponse();

@@ -1,6 +1,7 @@
 package com.bprints.be.transformer;
 
 import com.bprints.be.dtos.PrintTagDto;
+import com.bprints.be.entities.PrintCategory;
 import com.bprints.be.entities.PrintTag;
 
 import java.util.Objects;
@@ -17,8 +18,9 @@ public class PrintTagTransformer {
         PrintTagDto printTagDto = toDto(printTag);
 
         //Set Category
-        if (Objects.nonNull(printTag.getPrintCategory())) {
-            printTagDto.setPrintCategoryDto(CategoryTransformer.toDto(printTag.getPrintCategory()));
+        PrintCategory printCategory = printTag.getPrintCategory();
+        if (Objects.nonNull(printCategory) && Boolean.TRUE.equals(printCategory.getStatus())) {
+            printTagDto.setPrintCategoryDto(CategoryTransformer.toDto(printCategory));
         }
         return printTagDto;
     }
