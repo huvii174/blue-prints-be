@@ -2,14 +2,13 @@ package com.bprints.be.transformer;
 
 import com.bprints.be.dtos.BluePrintDto;
 import com.bprints.be.dtos.PrintCollectionDto;
-import com.bprints.be.entities.BluePrint;
 import com.bprints.be.entities.PrintCollection;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CollectionTransformer {
-    public static PrintCollection toEntity(PrintCollectionDto printCollectionDto){
+    public static PrintCollection toEntity(PrintCollectionDto printCollectionDto) {
         PrintCollection entity = new PrintCollection();
         entity.setName(printCollectionDto.getName());
         entity.setDescription(printCollectionDto.getDescription());
@@ -19,13 +18,17 @@ public class CollectionTransformer {
         return entity;
     }
 
-    public static PrintCollectionDto toDtoWithBluePrints(PrintCollection printCollection){
+    public static PrintCollectionDto toDtoWithBluePrints(PrintCollection printCollection) {
         PrintCollectionDto printCollectionDto = toDto(printCollection);
 
-        if (!printCollection.getBluePrints().isEmpty()){
-            Set<BluePrintDto> bluePrintDtoSet = printCollection.getBluePrints().stream()
-                    .map(bluePrint -> BluePrintTransformer.toBluePrintDto(bluePrint))
-                    .collect(Collectors.toSet());
+        if (!printCollection.getBluePrints().isEmpty()) {
+            Set<BluePrintDto> bluePrintDtoSet = new HashSet<>();
+            printCollection.getBluePrints()
+                    .forEach(bluePrint -> {
+                        if (Boolean.TRUE.equals(bluePrint.getStatus())) {
+                            bluePrintDtoSet.add(BluePrintTransformer.toDto(bluePrint));
+                        }
+                    });
             printCollectionDto.setBluePrints(bluePrintDtoSet);
         }
 
@@ -33,7 +36,7 @@ public class CollectionTransformer {
     }
 
 
-    public static PrintCollectionDto toDto(PrintCollection printCollection){
+    public static PrintCollectionDto toDto(PrintCollection printCollection) {
         return PrintCollectionDto.builder()
                 .id(printCollection.getId())
                 .name(printCollection.getName())
